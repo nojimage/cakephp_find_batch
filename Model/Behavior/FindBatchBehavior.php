@@ -1,17 +1,19 @@
 <?php
 
-class FindBatchBehavior extends ModelBehavior {
-	
-	var $_defaults = array();
+App::uses('ModelBehavior', 'Model');
 
-	function setup(&$model, $config = array()) {
-		$this->settings[$model->name] = am ($this->_defaults,$config);
+class FindBatchBehavior extends ModelBehavior {
+
+	protected $_defaults = array();
+
+	public function setup(&$model, $config = array()) {
+		$this->settings[$model->name] = am($this->_defaults, $config);
 	}
 
-	function findBatch(&$model, $settings, $callback) {
+	public function findBatch(&$model, $settings, $callback) {
 		$settings = am(array(
-			'limit'=>100
-		), $settings);
+			'limit' => 100
+			), $settings);
 
 		$nextOffset = 0;
 
@@ -20,32 +22,28 @@ class FindBatchBehavior extends ModelBehavior {
 		unset($countSettings['limit']);
 		$totalRecords = $model->find('count', $countSettings);
 
-		while($records = $model->find('all', am($settings, array(
-			'offset'=>$nextOffset
+		while ($records = $model->find('all', am($settings, array(
+			'offset' => $nextOffset
 		)))) {
 			$batchInfo = array(
-				'totalRecords'=>$totalRecords,
-				'offset'=>$nextOffset,
-				'start'=>$nextOffset+1,
-				'end'=>$nextOffset+count($records),
-				'alias'=>$model->alias
+				'totalRecords' => $totalRecords,
+				'offset' => $nextOffset,
+				'start' => $nextOffset + 1,
+				'end' => $nextOffset + count($records),
+				'alias' => $model->alias
 			);
-			
-			if(is_callable($callback)) {
-				if(is_array($callback)) {
+
+			if (is_callable($callback)) {
+				if (is_array($callback)) {
 					call_user_func($callback, $records, $batchInfo);
 				} else {
 					$callback($records, $batchInfo);
 				}
 			} else {
-				throw new Exception('Second argument is not callable.');
+				throw new CakeException('Second argument is not callable.');
 			}
 			$nextOffset += $settings['limit'];
 		}
 	}
 
-	
 }
-	
-	
-?>

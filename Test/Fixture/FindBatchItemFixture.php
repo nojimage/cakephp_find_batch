@@ -2,14 +2,14 @@
 
 class FindBatchItemFixture extends CakeTestFixture {
 
-	var $name = 'FindBatchItem';
+	public $name = 'FindBatchItem';
 
-	var $fields = array(
+	public $fields = array(
 		'id' => array('type' => 'integer', 'key' => 'primary'),
 		'title' => array('type' => 'string', 'null' => false),
 	);
 
-	var $records = array(
+	public $records = array(
 		array('title' => 'Find Batch Item 01'),
 		array('title' => 'Find Batch Item 02'),
 		array('title' => 'Find Batch Item 03'),
@@ -22,6 +22,5 @@ class FindBatchItemFixture extends CakeTestFixture {
 		array('title' => 'Find Batch Item 10'),
 		array('title' => 'Find Batch Item 11'),
 	);
-}
 
-?>
+}
